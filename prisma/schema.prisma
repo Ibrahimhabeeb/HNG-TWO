@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+
+datasource db {
+  provider = "mysql" 
+  // Ensure your DATABASE_URL environment variable uses the MySQL connection string format
+  // Example format: mysql://nest_user:nest_password@localhost:3306/countries_db
+  url      = env("DATABASE_URL") 
+}
+
+
+
+model Country {
+
+  id                  Int       @id @default(autoincrement())
+  
+
+  name                String    @unique
+  
+
+  capital             String?
+  
+
+  region              String?
+  
+
+  population          BigInt
+  
+
+  currency_code       String?
+  
+
+ exchange_rate       Decimal?   // <-- Changed from Float to Decimal
+  estimated_gdp       Decimal?   // <-- Changed from Float to Decimal
+  
+
+  flag_url            String? @db.Text // Use @db.Text for long URL strings
+
+  last_refreshed_at   DateTime  @default(now()) @map("last_refreshed_at")
+ 
+  @@index([region])
+  @@index([currency_code])
+  @@map("countries")
+}
